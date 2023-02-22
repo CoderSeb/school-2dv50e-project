@@ -1,8 +1,6 @@
 package lnu.exam.ProductApi.services;
 
 import java.util.List;
-import java.util.Objects;
-import lnu.exam.ProductApi.dtos.ProductDTO;
 import lnu.exam.ProductApi.exceptions.ResourceNotFoundException;
 import lnu.exam.ProductApi.models.Product;
 import lnu.exam.ProductApi.repositories.ProductRepository;
