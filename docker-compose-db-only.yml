@@ -7,10 +7,12 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=productdb
     ports:
       - '54320:5432'
     volumes: 
-      - local_pg_data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgAdmin
@@ -23,5 +25,6 @@ services:
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 volumes:
-  local_pg_data:
+  db:
+    driver: local
   pgadmin_data:
