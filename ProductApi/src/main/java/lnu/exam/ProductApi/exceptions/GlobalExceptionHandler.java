@@ -1,23 +1,17 @@
 package lnu.exam.ProductApi.exceptions;
 
-import java.util.Date;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+  @ResponseBody
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<?> resourceNotFoundException(ResourceNotFoundException exception, WebRequest request) {
-    ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false));
-    return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-  }
-
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<?> globalExceptionHandler(Exception exception, WebRequest request) {
-    ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(), request.getDescription(false));
-    return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  String resourceNotFoundHandler(ResourceNotFoundException exception) {
+    return exception.getMessage();
   }
 }

@@ -1,16 +1,9 @@
 package lnu.exam.ProductApi.exceptions;
 
 
-import java.io.Serial;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+public class ResourceNotFoundException extends RuntimeException {
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ResourceNotFoundException extends Exception {
-  @Serial
-  private static final long serialVersionUID = 1L;
-
-  public ResourceNotFoundException(String message) {
-    super(message);
+  public ResourceNotFoundException(Long id) {
+    super("Could not find resource with id: " + id);
   }
 }
