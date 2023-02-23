@@ -1,11 +1,13 @@
 package lnu.exam.ProductApi.controllers;
 
+import javax.validation.Valid;
 import lnu.exam.ProductApi.exceptions.ResourceNotFoundException;
 import lnu.exam.ProductApi.models.Product;
 import lnu.exam.ProductApi.services.ProductService;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,7 +31,13 @@ public class ProductController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public EntityModel<Product> create(@RequestBody Product product) {
+  public EntityModel<Product> create(@Valid @RequestBody Product product) {
     return productService.create(product);
+  }
+
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public ResponseEntity<?> delete(@PathVariable(value = "id") Long productId) {
+    return productService.delete(productId);
   }
 }

@@ -9,6 +9,7 @@ import lnu.exam.ProductApi.models.Product;
 import lnu.exam.ProductApi.repositories.ProductRepository;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -41,5 +42,12 @@ public class ProductService {
   public EntityModel<Product> create(Product product) {
     Product created = repository.save(product);
     return assembler.toModel(created);
+  }
+
+  public ResponseEntity<?> delete(Long id) {
+    Product foundProduct = repository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(id));
+    repository.delete(foundProduct);
+    return ResponseEntity.noContent().build();
   }
 }
