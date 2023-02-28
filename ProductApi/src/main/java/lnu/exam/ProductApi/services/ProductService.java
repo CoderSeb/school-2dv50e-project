@@ -1,8 +1,5 @@
 package lnu.exam.ProductApi.services;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import lnu.exam.ProductApi.components.ProductModelAssembler;
 import lnu.exam.ProductApi.controllers.ProductController;
 import lnu.exam.ProductApi.exceptions.ResourceNotFoundException;
@@ -12,6 +9,9 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
