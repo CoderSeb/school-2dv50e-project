@@ -1,6 +1,7 @@
 package lnu.exam.ProductApi.controllers;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
+import lnu.exam.ProductApi.dtos.ProductRequest;
 import lnu.exam.ProductApi.exceptions.ResourceNotFoundException;
 import lnu.exam.ProductApi.models.Product;
 import lnu.exam.ProductApi.services.ProductService;
@@ -30,14 +31,14 @@ public class ProductController {
   }
 
   @PutMapping("/{id}")
-  public EntityModel<Product> modify(@PathVariable(value = "id") Long productId, @Valid @RequestBody Product product) {
-    return productService.modify(productId, product);
+  public EntityModel<Product> modify(@PathVariable(value = "id") Long productId, @Valid @RequestBody ProductRequest productRequest) {
+    return productService.modify(productId, productRequest.toProduct());
   }
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public EntityModel<Product> create(@Valid @RequestBody Product product) {
-    return productService.create(product);
+  public EntityModel<Product> create(@Valid @RequestBody ProductRequest productRequest) {
+    return productService.create(productRequest.toProduct());
   }
 
   @DeleteMapping("/{id}")

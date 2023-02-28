@@ -2,6 +2,7 @@ package lnu.exam.ProductApi.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import lnu.exam.ProductApi.components.ProductModelAssembler;
 import lnu.exam.ProductApi.controllers.ProductController;
 import lnu.exam.ProductApi.exceptions.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -19,6 +21,7 @@ public class ProductService {
   private final ProductRepository repository;
 
   private final ProductModelAssembler assembler;
+
 
   ProductService(ProductRepository repository, ProductModelAssembler assembler) {
     this.repository = repository;
@@ -50,9 +53,10 @@ public class ProductService {
   }
 
   public EntityModel<Product> create(Product product) {
-    Product created = repository.save(product);
-    return assembler.toModel(created);
+      repository.save(product);
+      return assembler.toModel(product);
   }
+
 
   public ResponseEntity<?> delete(Long id) {
     Product foundProduct = repository.findById(id)
