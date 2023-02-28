@@ -39,6 +39,16 @@ public class ProductService {
     return assembler.toModel(product);
   }
 
+  public EntityModel<Product> modify(Long id, Product product) {
+    Product existingProduct = repository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(id));
+    existingProduct.setName(product.getName());
+    existingProduct.setDescription(product.getDescription());
+    existingProduct.setPrice(product.getPrice());
+    repository.save(existingProduct);
+    return assembler.toModel(existingProduct);
+  }
+
   public EntityModel<Product> create(Product product) {
     Product created = repository.save(product);
     return assembler.toModel(created);

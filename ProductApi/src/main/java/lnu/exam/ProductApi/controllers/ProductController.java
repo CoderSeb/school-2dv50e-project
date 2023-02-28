@@ -29,6 +29,11 @@ public class ProductController {
     return productService.getById(productId);
   }
 
+  @PutMapping("/{id}")
+  public EntityModel<Product> modify(@PathVariable(value = "id") Long productId, @Valid @RequestBody Product product) {
+    return productService.modify(productId, product);
+  }
+
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public EntityModel<Product> create(@Valid @RequestBody Product product) {
