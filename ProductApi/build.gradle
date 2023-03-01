@@ -30,6 +30,7 @@ dependencies {
 	testImplementation 'org.spockframework:spock-core:2.2-groovy-3.0'
 	testImplementation 'org.spockframework:spock-spring:2.2-groovy-3.0'
 	testImplementation 'org.codehaus.groovy:groovy-all:3.0.15'
+	testImplementation 'org.mockito:mockito-all:1.10.19'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'

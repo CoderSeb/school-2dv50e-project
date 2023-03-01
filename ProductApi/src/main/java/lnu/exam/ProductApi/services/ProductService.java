@@ -5,6 +5,7 @@ import lnu.exam.ProductApi.controllers.ProductController;
 import lnu.exam.ProductApi.exceptions.ResourceNotFoundException;
 import lnu.exam.ProductApi.models.Product;
 import lnu.exam.ProductApi.repositories.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +19,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ProductService {
+
   private final ProductRepository repository;
 
   private final ProductModelAssembler assembler;
 
-
+  @Autowired
   ProductService(ProductRepository repository, ProductModelAssembler assembler) {
     this.repository = repository;
     this.assembler = assembler;
