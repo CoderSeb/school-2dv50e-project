@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.2'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id 'groovy'
 }
 
 group = 'lnu.exam'
@@ -26,6 +27,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'springframework:spring-context:1.2.6'
 	implementation 'org.springframework:spring-context:6.0.5'
+	testImplementation 'org.spockframework:spock-core:2.2-groovy-3.0'
+	testImplementation 'org.spockframework:spock-spring:2.2-groovy-3.0'
+	testImplementation 'org.codehaus.groovy:groovy-all:3.0.15'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'org.postgresql:postgresql'
