@@ -9,9 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.hateoas.EntityModel
 import spock.lang.Specification
 import spock.lang.Subject
-import spock.lang.Unroll
 
-@DataJpaTest
 class ProductServiceSpec extends Specification {
 
     @Autowired
@@ -21,7 +19,7 @@ class ProductServiceSpec extends Specification {
 
     @Subject
     ProductService productService = new ProductService(repository, assembler)
-    
+
     def "create method should save product and return entity model"() {
         given: "a product with name of 'test product'"
         ProductRequest productRequest = new ProductRequest(name: "test product", description: "test product desc", price: 10.0)
