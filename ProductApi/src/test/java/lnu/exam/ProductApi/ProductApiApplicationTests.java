@@ -1,9 +1,9 @@
 package lnu.exam.ProductApi;
 
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+@SpringBootTest(classes = ProductApiApplication.class)
 class ProductApiApplicationTests {
 
 	@Test
