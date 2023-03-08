@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -91,5 +92,30 @@ public class ProductServiceTest {
         EntityModel<Product> actual = service.modify(42L, p2);
         assertEquals(
             Objects.requireNonNull(expected.getContent()).getName(), Objects.requireNonNull(actual.getContent()).getName());
+    }
+
+
+    @AfterEach
+    void tearDown() {
+    }
+
+    @Test
+    void getAll() {
+    }
+
+    @Test
+    void getById() {
+    }
+
+    @Test
+    void modify() {
+    }
+
+    @Test
+    void create() {
+    }
+
+    @Test
+    void delete() {
     }
 }
