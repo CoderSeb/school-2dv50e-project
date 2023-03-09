@@ -16,6 +16,6 @@ public class ConditionalTest {
 
     private boolean myFunction() {
         // Return true or false based on some condition
-        return false;
+        return true;
     }
 }
