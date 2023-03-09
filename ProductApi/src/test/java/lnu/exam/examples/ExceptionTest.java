@@ -10,6 +10,8 @@ public class ExceptionTest {
         str.toLowerCase();
     }
 
+    // Commented out but test is good since it should fail
+    /* 
     @Test(expectedExceptions = {NullPointerException.class, ArrayIndexOutOfBoundsException.class})
     public void testMultipleExceptionsUnexpectedFirst() {
         int result = 5/0; // this line will throw an unexpected ArithmeticException, making the test fail.
@@ -18,6 +20,7 @@ public class ExceptionTest {
         arr[10] = 5;
         str.toLowerCase();
     }
+    */
 
     @Test(expectedExceptions = {NullPointerException.class, ArrayIndexOutOfBoundsException.class})
     public void testMultipleExceptionsUnexpectedSecond() {
