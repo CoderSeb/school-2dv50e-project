@@ -1,3 +1,5 @@
+package lnu.exam.examples;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

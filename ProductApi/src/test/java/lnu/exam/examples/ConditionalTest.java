@@ -1,3 +1,5 @@
+package lnu.exam.examples;
+
 import org.testng.annotations.Test;
 
 public class ConditionalTest {

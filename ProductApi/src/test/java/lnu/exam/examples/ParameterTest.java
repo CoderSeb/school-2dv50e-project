@@ -1,6 +1,9 @@
+package lnu.exam.examples;
+
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
 
 public class ParameterTest {
 
@@ -8,10 +11,10 @@ public class ParameterTest {
     @DataProvider(name = "testData")
     public Object[][] testData() {
         return new Object[][] {
-            { 2, 3, 5 },
-            { -1, 5, 4 },
-            { 0, 0, 0 },
-            { 100, -50, 50 }
+                { 2, 3, 5 },
+                { -1, 5, 4 },
+                { 0, 0, 0 },
+                { 100, -50, 50 }
         };
     }
 
