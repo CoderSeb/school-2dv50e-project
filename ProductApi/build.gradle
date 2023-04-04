@@ -38,4 +38,8 @@ tasks.named('test') {
 	useTestNG() {
 		useDefaultListeners = true
 	}
+	testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        showStandardStreams = true
+    }
 }

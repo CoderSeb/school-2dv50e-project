@@ -18,6 +18,7 @@ import org.testng.annotations.Test;
 import lnu.exam.ProductApi.components.ProductModelAssembler;
 import lnu.exam.ProductApi.models.Product;
 import lnu.exam.ProductApi.repositories.ProductRepository;
+import lnu.exam.testUtils.PerformanceTests;
 
 public class ProductServiceTests {
 
@@ -42,6 +43,7 @@ public class ProductServiceTests {
 
     @Test
     public void testModify() {
+        long memoryBefore = PerformanceTests.getMemoryUsage();
         // Prepare test data
         Long productId = 1L;
         Product currentProduct = new Product();
@@ -77,5 +79,8 @@ public class ProductServiceTests {
         verify(productRepository).findById(productId);
         verify(productRepository).save(any(Product.class));
         verify(productAssembler).toModel(any(Product.class));
+
+        long memoryAfter = PerformanceTests.getMemoryUsage();
+        System.out.println("Memory usage for testModify(): " + (memoryAfter - memoryBefore) + " bytes");
     }
 }
