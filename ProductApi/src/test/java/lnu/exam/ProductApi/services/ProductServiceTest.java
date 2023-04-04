@@ -17,6 +17,7 @@ import org.springframework.hateoas.EntityModel;
 import lnu.exam.ProductApi.components.ProductModelAssembler;
 import lnu.exam.ProductApi.models.Product;
 import lnu.exam.ProductApi.repositories.ProductRepository;
+import lnu.exam.ProductApi.testUtils.PerformanceTester;
 
 public class ProductServiceTest {
 
@@ -36,6 +37,7 @@ public class ProductServiceTest {
 
     @Test
     public void testModify() {
+        long memoryBefore = PerformanceTester.getUsedMemory();
         // Prepare test data
         Long productId = 1L;
         Product currentProduct = new Product();
@@ -71,5 +73,9 @@ public class ProductServiceTest {
         verify(productRepository).findById(productId);
         verify(productRepository).save(any(Product.class));
         verify(productAssembler).toModel(any(Product.class));
+
+        long memoryAfter = PerformanceTester.getUsedMemory();
+
+        System.out.println("Memory used by testModify: " + (memoryAfter - memoryBefore + " bytes"));
     }
 }
