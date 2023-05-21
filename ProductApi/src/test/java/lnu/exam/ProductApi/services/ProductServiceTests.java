@@ -16,6 +16,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -187,8 +188,10 @@ public class ProductServiceTests {
     }
 
     @AfterMethod
-    public void tearDown() {
+    public void tearDown(ITestResult result) {
         memoryAfter = PerformanceTests.getMemoryUsage();
-        System.out.println("Memory usage: " + (memoryAfter - memoryBefore) + " bytes");
+        System.out.println(
+                "Memory usage " + result.getMethod().getMethodName() + ": " + (memoryAfter - memoryBefore) + " bytes");
+        System.gc();
     }
 }
