@@ -10,7 +10,6 @@ import static org.testng.Assert.assertThrows;
 
 import java.util.Optional;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.hateoas.EntityModel;
@@ -29,7 +28,6 @@ import lnu.exam.testUtils.PerformanceTests;
 
 public class ProductServiceTests {
 
-    @InjectMocks
     private ProductService productService;
 
     @Mock
@@ -38,16 +36,17 @@ public class ProductServiceTests {
     @Mock
     private ProductModelAssembler productAssembler;
 
-    private final Long productId = 1L;
-    private Product productOne;
-    private Product productTwo;
-
     private long memoryBefore;
     private long memoryAfter;
 
+    private Product productOne;
+    private Product productTwo;
+    private Long productId;
+
     @BeforeMethod
-    public void setUp() {
+    public void init() {
         MockitoAnnotations.openMocks(this);
+        productService = new ProductService(productRepository, productAssembler);
         productOne = new Product();
         productOne.setId(productId);
         productOne.setName("New product");
@@ -59,13 +58,17 @@ public class ProductServiceTests {
         productTwo.setName("Updated product");
         productTwo.setDescription("Updated description");
         productTwo.setPrice(200.0);
+
         memoryBefore = PerformanceTests.getMemoryUsage();
     }
 
-    @Test(priority = 0)
+    @Test(priority = 3)
     public void testCreate() {
         // Prepare test data
-        Product newProduct = productOne;
+        Product newProduct = new Product();
+        newProduct.setName(productOne.getName());
+        newProduct.setDescription(productOne.getDescription());
+        newProduct.setPrice(productOne.getPrice());
 
         // Prepare saved product (usually this would be created by the repository)
         Product savedProduct = productOne;
@@ -84,7 +87,6 @@ public class ProductServiceTests {
 
         // Call the service method
         EntityModel<Product> actual = productService.create(newProduct);
-
         // Verify the result
         assertEquals(expected, actual);
 
@@ -93,9 +95,10 @@ public class ProductServiceTests {
         verify(productAssembler).toModel(any(Product.class));
     }
 
-    @Test(priority = 1)
+    @Test(priority = 4)
     public void testModify() {
         // Prepare test data
+        Long productId = 1L;
         Product currentProduct = productOne;
         Product updatedProduct = productTwo;
 
@@ -103,8 +106,7 @@ public class ProductServiceTests {
         EntityModel<Product> expected = EntityModel.of(updatedProduct);
 
         // Set up mock behavior
-        when(productRepository.findById(productId))
-                .thenReturn(Optional.of(currentProduct));
+        when(productRepository.findById(productId)).thenReturn(Optional.of(currentProduct));
         when(productRepository.save(any(Product.class))).thenAnswer(invocation -> {
             Product productToSave = invocation.getArgument(0);
             productToSave.setId(productId);
@@ -124,7 +126,7 @@ public class ProductServiceTests {
         verify(productAssembler).toModel(any(Product.class));
     }
 
-    @Test(priority = 2)
+    @Test(priority = 5)
     public void testDelete() {
         // Prepare test data
         Product existingProduct = productOne;
@@ -144,7 +146,7 @@ public class ProductServiceTests {
         verify(productRepository).delete(existingProduct);
     }
 
-    @Test(priority = 3)
+    @Test(priority = 6)
     public void testModify_NotFound() {
         Long wrongProductId = 3L;
         // Set up mock behavior
@@ -166,7 +168,7 @@ public class ProductServiceTests {
         verify(productAssembler, never()).toModel(any(Product.class));
     }
 
-    @Test(priority = 4)
+    @Test(priority = 7)
     public void testDelete_NotFound() {
         Long wrongProductId = 3L;
         // Set up mock behavior
@@ -188,7 +190,5 @@ public class ProductServiceTests {
     public void tearDown() {
         memoryAfter = PerformanceTests.getMemoryUsage();
         System.out.println("Memory usage: " + (memoryAfter - memoryBefore) + " bytes");
-
-        System.gc();
     }
 }

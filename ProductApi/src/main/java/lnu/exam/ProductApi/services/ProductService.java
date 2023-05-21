@@ -1,20 +1,21 @@
 package lnu.exam.ProductApi.services;
 
-import lnu.exam.ProductApi.components.ProductModelAssembler;
-import lnu.exam.ProductApi.controllers.ProductController;
-import lnu.exam.ProductApi.exceptions.ResourceNotFoundException;
-import lnu.exam.ProductApi.models.Product;
-import lnu.exam.ProductApi.repositories.ProductRepository;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import lnu.exam.ProductApi.components.ProductModelAssembler;
+import lnu.exam.ProductApi.controllers.ProductController;
+import lnu.exam.ProductApi.exceptions.ResourceNotFoundException;
+import lnu.exam.ProductApi.models.Product;
+import lnu.exam.ProductApi.repositories.ProductRepository;
 
 @Service
 public class ProductService {
@@ -22,10 +23,13 @@ public class ProductService {
 
   private final ProductModelAssembler assembler;
 
-
   ProductService(ProductRepository repository, ProductModelAssembler assembler) {
     this.repository = repository;
     this.assembler = assembler;
+  }
+
+  public ProductRepository getRepository() {
+    return repository;
   }
 
   public CollectionModel<EntityModel<Product>> getAll() {
@@ -44,7 +48,7 @@ public class ProductService {
 
   public EntityModel<Product> modify(Long id, Product product) {
     Product existingProduct = repository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException(id));
+        .orElseThrow(() -> new ResourceNotFoundException(id));
     existingProduct.setName(product.getName());
     existingProduct.setDescription(product.getDescription());
     existingProduct.setPrice(product.getPrice());
@@ -53,10 +57,9 @@ public class ProductService {
   }
 
   public EntityModel<Product> create(Product product) {
-      repository.save(product);
-      return assembler.toModel(product);
+    repository.save(product);
+    return assembler.toModel(product);
   }
-
 
   public ResponseEntity<?> delete(Long id) {
     Product foundProduct = repository.findById(id)
