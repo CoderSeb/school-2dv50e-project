@@ -1,48 +1,115 @@
 package lnu.exam.ProductApi.services
 
 import lnu.exam.ProductApi.components.ProductModelAssembler
+import lnu.exam.ProductApi.exceptions.ResourceNotFoundException
 import lnu.exam.ProductApi.models.Product
 import lnu.exam.ProductApi.repositories.ProductRepository
-import lnu.exam.testUtils.PerformanceTests
 import org.springframework.hateoas.EntityModel
+import org.springframework.http.HttpStatus
+import spock.lang.Shared
 import spock.lang.Specification
-import spock.lang.Subject
+import lnu.exam.testUtils.PerformanceTests
 
-class ProductServiceTest extends Specification {
+import java.util.Optional
 
-    ProductRepository productRepository = Mock()
-    ProductModelAssembler productModelAssembler = new ProductModelAssembler()
+class ProductServiceSpec extends Specification {
 
-    @Subject
-    ProductService productService = new ProductService(productRepository, productModelAssembler)
+    @Shared ProductService productService
 
-    def "Modify"() {
-        long startMemory = PerformanceTests.getMemoryUsage()
+    @Shared ProductRepository productRepository
+
+    @Shared ProductModelAssembler productAssembler
+
+    @Shared Long productId = 1L
+
+    @Shared Product productOne
+
+    @Shared Product productTwo
+
+    @Shared Long memoryBefore;
+    @Shared Long memoryAfter;
+
+    def setup() {
+        productRepository = Mock(ProductRepository)
+        productAssembler = Mock(ProductModelAssembler)
+
+        productService = new ProductService(productRepository, productAssembler)
+
+        productOne = new Product()
+        productOne.setId(productId)
+        productOne.setName("New product")
+        productOne.setDescription("New description")
+        productOne.setPrice(100.0)
+
+        productTwo = new Product()
+        productTwo.setId(productId)
+        productTwo.setName("Updated product")
+        productTwo.setDescription("Updated description")
+        productTwo.setPrice(200.0)
+        memoryBefore = PerformanceTests.getMemoryUsage()
+    }
+
+    def "testCreate()"() {
         given:
-        Long productId = 1L
-        Product currentProduct = new Product()
-        currentProduct.setId(productId)
-        currentProduct.setName("Current Name")
-        currentProduct.setDescription("Current Description")
-        currentProduct.setPrice(100.0)
-        Product updatedProduct = currentProduct
-        updatedProduct.setId(productId)
-        updatedProduct.setName("Updated Name")
-        updatedProduct.setDescription("Updated Description")
-        updatedProduct.setPrice(200.0)
-
-        EntityModel<Product> expected = EntityModel.of(updatedProduct)
-
-        productRepository.findById(productId) >> Optional.of(currentProduct)
+        EntityModel<Product> expected = EntityModel.of(productOne)
 
         when:
-        EntityModel<Product> actual = productService.modify(productId, updatedProduct)
+        productService.create(productOne)
 
         then:
-        actual.getContent() == expected.getContent()
+        1 * productRepository.save(_) >> productOne
+        1 * productAssembler.toModel(_) >> expected
+    }
 
-        long endMemory = PerformanceTests.getMemoryUsage()
+    def "testModify()"() {
+        given:
+        EntityModel<Product> expected = EntityModel.of(productTwo)
 
-        println("Memory usage modify test: " + (endMemory - startMemory) + " bytes")
+        when:
+        productService.modify(productId, productTwo)
+
+        then:
+        1 * productRepository.findById(productId) >> Optional.of(productOne)
+        1 * productRepository.save(_) >> productTwo
+        1 * productAssembler.toModel(_) >> expected
+    }
+
+    def "testDelete()"() {
+        when:
+        def responseEntity = productService.delete(productId)
+
+        then:
+        1 * productRepository.findById(productId) >> Optional.of(productOne)
+        1 * productRepository.delete(_)
+        responseEntity.getStatusCode() == HttpStatus.NO_CONTENT
+    }
+
+    def "testModify()_NotFound"() {
+        given:
+        Long wrongProductId = 3L
+
+        when:
+        productService.modify(wrongProductId, productTwo)
+
+        then:
+        1 * productRepository.findById(wrongProductId) >> Optional.empty()
+        thrown(ResourceNotFoundException)
+    }
+
+    def "testDelete()_NotFound"() {
+        given:
+        Long wrongProductId = 3L
+
+        when:
+        productService.delete(wrongProductId)
+
+        then:
+        1 * productRepository.findById(wrongProductId) >> Optional.empty()
+        thrown(ResourceNotFoundException)
+    }
+
+    def cleanup() throws MissingMethodException {
+        memoryAfter = PerformanceTests.getMemoryUsage()
+        println "Memory used: " + (memoryAfter - memoryBefore) + " bytes"
     }
 }
