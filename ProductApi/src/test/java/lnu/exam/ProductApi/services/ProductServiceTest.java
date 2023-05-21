@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -48,9 +49,12 @@ public class ProductServiceTest {
     private long memoryBefore;
     private long memoryAfter;
 
+    private TestInfo testInfo;
+
     @BeforeEach
-    public void setUp() {
+    public void setUp(TestInfo testInfo) {
         MockitoAnnotations.openMocks(this);
+        this.testInfo = testInfo;
         productOne = new Product();
         productOne.setId(productId);
         productOne.setName("Test product");
@@ -62,14 +66,6 @@ public class ProductServiceTest {
         productTwo.setDescription("Updated description");
         productTwo.setPrice(200.0);
         memoryBefore = PerformanceTester.getUsedMemory();
-    }
-
-    @AfterEach
-    public void tearDown() throws InterruptedException {
-        memoryAfter = PerformanceTester.getUsedMemory();
-        System.out.println("Memory used by test: " +
-                (memoryAfter - memoryBefore + " bytes"));
-        System.gc();
     }
 
     @Test
@@ -198,5 +194,13 @@ public class ProductServiceTest {
 
         // Verify that delete was never called
         verify(productRepository, never()).delete(any(Product.class));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        memoryAfter = PerformanceTester.getUsedMemory();
+        System.out.println("Memory used by " + testInfo.getDisplayName() + ": " +
+                (memoryAfter - memoryBefore + " bytes"));
+        System.gc();
     }
 }
